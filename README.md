@@ -72,8 +72,7 @@ EOF
 ```
 
 * powerstrip-weave start zettio weave image!
-
-If you want a weave cli use this:
+* install weave cli usage
 
 ```
 _weave() {
@@ -184,7 +183,7 @@ EOF
 ```
 
 **WARNING**: Here you must use the weave-01 IP-address. The example
-use subshell feature, but variable access isn't supported yet form docker-compose 1.1.0. Sometimes IP address from a docker machine can changed after reboot!
+use subshell feature, but dynamic variable access isn't supported yet form docker-compose 1.1.0. Sometimes IP-address from a docker machine can changed after reboot!
 
 ```
 weave:
