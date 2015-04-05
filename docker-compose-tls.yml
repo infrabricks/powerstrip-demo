@@ -1,0 +1,21 @@
+debug:
+    image: binocarlos/powerstrip-debug
+    ports:
+      - "80"
+nginx:
+  build: ./powerstrip-nginx
+  ports:
+    - "2376:2376"
+  links:
+    - powerstrip:powerstrip
+  volumes:
+    - /var/lib/boot2docker:/etc/ssl/certs
+powerstrip:
+  image: clusterhq/powerstrip
+  ports:
+    - "2375"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - adapters-only-debug.yml:/etc/powerstrip/adapters.yml
+  links:
+    - debug:debug

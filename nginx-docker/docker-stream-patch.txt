@@ -1,0 +1,55 @@
+diff -r 2b3b737b5456 src/http/ngx_http_upstream.c
+--- a/src/http/ngx_http_upstream.c	Tue Mar 24 18:45:34 2015 +0300
++++ b/src/http/ngx_http_upstream.c	Sun Apr 05 10:44:50 2015 +0200
+@@ -95,6 +95,8 @@
+     ngx_table_elt_t *h, ngx_uint_t offset);
+ static ngx_int_t ngx_http_upstream_process_content_length(ngx_http_request_t *r,
+     ngx_table_elt_t *h, ngx_uint_t offset);
++static ngx_int_t ngx_http_upstream_process_content_type(ngx_http_request_t *r,
++    ngx_table_elt_t *h, ngx_uint_t offset);
+ static ngx_int_t ngx_http_upstream_process_last_modified(ngx_http_request_t *r,
+     ngx_table_elt_t *h, ngx_uint_t offset);
+ static ngx_int_t ngx_http_upstream_process_set_cookie(ngx_http_request_t *r,
+@@ -181,7 +183,7 @@
+                  ngx_http_upstream_copy_header_line, 0, 0 },
+ 
+     { ngx_string("Content-Type"),
+-                 ngx_http_upstream_process_header_line,
++                 ngx_http_upstream_process_content_type,
+                  offsetof(ngx_http_upstream_headers_in_t, content_type),
+                  ngx_http_upstream_copy_content_type, 0, 1 },
+ 
+@@ -2955,7 +2957,7 @@
+     u->write_event_handler = ngx_http_upstream_upgraded_write_upstream;
+     r->read_event_handler = ngx_http_upstream_upgraded_read_downstream;
+     r->write_event_handler = ngx_http_upstream_upgraded_write_downstream;
+-
++    u->headers_in.chunked = 0;
+     if (clcf->tcp_nodelay) {
+         tcp_nodelay = 1;
+ 
+@@ -4092,6 +4094,24 @@
+     return NGX_OK;
+ }
+ 
++static ngx_int_t
++ngx_http_upstream_process_content_type(ngx_http_request_t *r, ngx_table_elt_t *h,
++    ngx_uint_t offset)
++{
++    ngx_int_t ret = ngx_http_upstream_process_header_line(r, h, offset);
++    if (ret != NGX_OK) {
++        return ret;
++    }
++
++    // is docker header ?
++    if (ngx_strstrn(h->value.data,
++                    "application/vnd.docker.raw-stream", 34 - 1) != NULL) {
++        r->upstream->upgrade = 1;
++    }
++
++    return NGX_OK;
++}
++
+ 
+ static ngx_int_t
+ ngx_http_upstream_process_last_modified(ngx_http_request_t *r,

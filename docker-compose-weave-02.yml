@@ -1,0 +1,21 @@
+weave:
+  image: binocarlos/powerstrip-weave
+  ports:
+    - "80"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  command: launch 192.168.99.102
+debug:
+    image: binocarlos/powerstrip-debug
+    ports:
+      - "80"
+powerstrip:
+  image: clusterhq/powerstrip
+  ports:
+   - "2378:2375"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - adapters-debug.yml:/etc/powerstrip/adapters.yml
+  links:
+   - weave:weave
+   - debug:debug
