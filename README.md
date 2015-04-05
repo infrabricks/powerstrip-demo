@@ -7,7 +7,6 @@
 * Use powerstrip with docker-machine
 * Setup powerstrip with TLS
 
-![powerstrip-tls](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-tls.png)
 
 ## Out of the box powerstrip weave installation
 
@@ -72,7 +71,7 @@ EOF
 ```
 
 * powerstrip-weave start zettio weave image!
-* install weave cli usage
+* install weave cli tool
 
 ```
 _weave() {
@@ -209,6 +208,8 @@ $ docker-machine ssh weave-02
 Currently powerstrip docker extension show case version doesn't support tls.
 If you plan easy transparent access from your MAC, with machine and swarm, it is a good idea to setup TLS.
 
+![powerstrip-tls](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-tls.png)
+
 **The plan**:
 
 * use nginx with docker-machine boot2docker certs
@@ -255,7 +256,7 @@ $ docker run -ti --rm ubuntu
 ...
 ```
 
-### Todo
+### More ideas for powerstrip tls and docker-machine support
 
 * Support regenerate certs after failure or IP change!
   * After IP Adress changed regenerate local docker-compose
@@ -281,7 +282,7 @@ cd nginx-docker
 ./build.sh
 ```
 
-### Review patch
+### Review the patch
 
 Use your nginx version
 
