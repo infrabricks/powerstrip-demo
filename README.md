@@ -9,7 +9,7 @@
 
 ![powerstrip-tls](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-tls.png)
 
-## Simple out of the box powerstrip usage
+## Out of the box powerstrip weave installation
 
 ![powerstrip-weave](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-weave.png)
 
@@ -48,7 +48,7 @@ adapters:
 EOF
 ```
 
-Create you powerstrip weave composition:
+Create you powerstrip weave at a docker composition:
 
 ```
 cat >docker-compose.yml <EOF
