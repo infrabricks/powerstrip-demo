@@ -9,6 +9,8 @@
 
 ## Simple out of the box powerstrip usage
 
+![powerstrip-tls](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-tls.png)
+
 ### Create you first powerstrip weave machine
 
 Add mirror to your installation!
