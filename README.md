@@ -7,9 +7,11 @@
 * Use powerstrip with docker-machine
 * Setup powerstrip with TLS
 
+![powerstrip-tls](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-tls.png)
+
 ## Simple out of the box powerstrip usage
 
-![powerstrip-tls](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-tls.png)
+![powerstrip-weave](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-weave.png)
 
 ### Create you first powerstrip weave machine
 
