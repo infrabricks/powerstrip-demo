@@ -139,11 +139,12 @@ default via 172.17.42.1 dev eth0
 #### Stop and remove
 
 ```
-docker-compose stop
-docker-compose rm
+> DOCKER_HOST=tcp://127.0.0.1:2378
+> docker-compose stop
+> docker-compose rm
 # stop and remove sub container...
-docker stop weave weavewait
-docker rm weave weavewait
+> docker stop weave weavewait
+> docker rm weave weavewait
 ```
 
 ### install second powerstrip weave machine
@@ -194,8 +195,8 @@ powerstrip:
     - /var/run/docker.sock:/var/run/docker.sock
     - adapters-debug.yml:/etc/powerstrip/adapters.yml
   links:
-   - weave:weave
-   - debug:debug
+    - weave:weave
+    - debug:debug
 EOF
 > docker-compose -f docker-compose-weave-02.yml up -d
 ```
@@ -218,7 +219,7 @@ Now you can start a container and ping your mysql:
 ```
 $ docker-machine ssh weave-02
 > DOCKER_HOST=tcp://127.0.0.1:2378
-> docker run -ti --rm -e -e WEAVE_CIDR=10.255.0.2/8 ubuntu
+> docker run -ti --rm -e WEAVE_CIDR=10.255.0.2/8 ubuntu
 > ping 10.255.0.1 -c 1
 ```
 
@@ -293,6 +294,54 @@ $ docker run -ti --rm ubuntu
   * you use the command `docker-machine regenerate-certs <machine>``
 * Limit the usage: Add access control to your nginx conf
 * check with weave
+
+### weave-02 with tls
+
+```
+> cat >/var/lib/boot2docker/profile <<EOF
+DOCKER_TLS=no
+DOCKER_HOST=" "
+EXTRA_ARGS="--label=provider=virtualbox --registry-mirror=http://devcache:5000\"
+EOF
+> /etc/init.d/docker stop
+> /etc/init.d/docker start
+> cat >docker-compose-weave-02-tls.yml <<EOF
+weave:
+  image: binocarlos/powerstrip-weave
+  ports:
+    - "80"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  command: launch 192.168.99.102
+powerstrip:
+  image: clusterhq/powerstrip
+  ports:
+    - "2375"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - adapters.yml:/etc/powerstrip/adapters.yml
+  links:
+    - weave:weave
+nginx:
+  build: ./powerstrip-nginx
+  ports:
+    - "2376:2376"
+  links:
+    - powerstrip:powerstrip
+  volumes:
+    - /var/lib/boot2docker:/etc/ssl/certs
+EOF
+# install docker compose >/var/lib/boot2docker/bootlocal.sh for restart!
+> docker run --rm --entrypoint /scripts/install -v /usr/local/bin:/data infrabricks/docker-compose
+> cd /Users/peter/powerstrip-demo
+> docker-compose -f docker-compose-weave-02-tls.yml up -d
+exit
+$ eval $(docker-machine env weave-02)
+$ docker ps
+...
+$ docker run -ti -e WEAVE_CIDR=10.255.0.4/8 ubuntu
+...
+```
 
 ### build the nginx docker patched version
 
