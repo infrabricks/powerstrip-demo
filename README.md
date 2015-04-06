@@ -2,11 +2,11 @@
 
 ![logo](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/logo.png)
 
-* Install and download https://github.com/docker/machine
+* Install boot2docker and https://github.com/docker/machine.
 * If you use multiple machines, setup a docker registry mirror!
-* Use powerstrip with docker-machine
-* Setup powerstrip with TLS
-
+* This project show:
+  * How you can use powerstrip with docker-machine.
+  * Setup powerstrip with TLS nginx proxy.
 
 ## Out of the box powerstrip weave installation
 
@@ -14,7 +14,11 @@
 
 ### Create you first powerstrip weave machine
 
-Add mirror to your installation!
+**TIPP**: Add docker registry mirror to your installation at a separate machine!
+  * https://github.com/docker/docker/blob/master/docs/sources/articles/registry_mirror.md
+  * faster setup!
+
+Use the mirror at you docker machine.
 
 ```
 $ docker-machine create -d virtualbox weave-01
@@ -70,6 +74,8 @@ powerstrip:
 EOF
 ```
 
+* boot2docker block port 2375, we use 2378!
+
 #### Install docker-compose at boot2docker installation
 
 ```
@@ -93,13 +99,13 @@ You must install the git/bash tools from boot2docker package!
 ```
 $ docker-machine ssh weave-01
 > export DOCKER_HOST=tcp://127.0.0.1:2378
-docker ps
+> docker ps
 ```
 
 or
 
 ```
-$ docker-machine ssh weave-01 "/bin/sh -c "docker -H tcp://127.0.0.1:2375 ps"
+$ docker-machine ssh weave-01 "/bin/sh -c "docker -H tcp://127.0.0.1:2378 ps"
 ```
 
 * powerstrip-weave start zettio weave image!
@@ -346,8 +352,8 @@ $ docker run -ti -e WEAVE_CIDR=10.255.0.4/8 ubuntu
 ### build the nginx docker patched version
 
 ```
-cd nginx-docker
-./build.sh
+$ cd nginx-docker
+$ ./build.sh
 ```
 
 ### Review the patch
@@ -355,8 +361,8 @@ cd nginx-docker
 Use your nginx version
 
 ```
-hg clone http://hg.nginx.org/nginx -r "release-1.7.11"
-cd nginx
+$ hg clone http://hg.nginx.org/nginx -r "release-1.7.11"
+$ cd nginx
 ```
 
 Patch it with `nginx-docker/docker-stream-patch.txt`
