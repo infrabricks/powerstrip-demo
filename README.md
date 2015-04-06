@@ -74,7 +74,7 @@ powerstrip:
 EOF
 ```
 
-* boot2docker block port 2375, we use 2378!
+**INFO**: boot2docker block port 2375, we use 2378!
 
 #### Install docker-compose at boot2docker installation
 
@@ -251,6 +251,7 @@ If you plan easy transparent access from your MAC, with machine and swarm, it is
 
 ### Check my powerstrip TLS experiment
 
+
 ```
 $ docker-machine create -d virtualbox weave-03
 $ powerstrip-demo/nginx-docker
@@ -301,7 +302,9 @@ $ docker run -ti --rm ubuntu
 * Limit the usage: Add access control to your nginx conf
 * check with weave
 
-### weave-02 with tls
+### weave-03 with tls
+
+**TIPP**: Stop and remove all container from tls debugging experiment!
 
 ```
 > cat >/var/lib/boot2docker/profile <<EOF
@@ -311,7 +314,7 @@ EXTRA_ARGS="--label=provider=virtualbox --registry-mirror=http://devcache:5000\"
 EOF
 > /etc/init.d/docker stop
 > /etc/init.d/docker start
-> cat >docker-compose-weave-02-tls.yml <<EOF
+> cat >docker-compose-weave-03-tls.yml <<EOF
 weave:
   image: binocarlos/powerstrip-weave
   ports:
@@ -340,7 +343,7 @@ EOF
 # install docker compose >/var/lib/boot2docker/bootlocal.sh for restart!
 > docker run --rm --entrypoint /scripts/install -v /usr/local/bin:/data infrabricks/docker-compose
 > cd /Users/peter/powerstrip-demo
-> docker-compose -f docker-compose-weave-02-tls.yml up -d
+> docker-compose -f docker-compose-weave-03-tls.yml up -d
 exit
 $ eval $(docker-machine env weave-02)
 $ docker ps
