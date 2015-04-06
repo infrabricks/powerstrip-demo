@@ -1,10 +1,17 @@
+weave:
+  image: binocarlos/powerstrip-weave
+  ports:
+    - "80"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  command: launch
 powerstrip:
   image: clusterhq/powerstrip
   ports:
-   - "2378:2375"
+    - "2378:2375"
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - adapters.yml:/etc/powerstrip/adapters.yml
-  external_links:
-   - powerstrip-weave:weave
+  links:
+    - weave:weave
 

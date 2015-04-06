@@ -50,24 +50,56 @@ EOF
 Create you powerstrip weave at a docker composition:
 
 ```
-cat >docker-compose.yml <EOF
-weave
+cat >docker-compose.yml <<EOF
+weave:
   image: binocarlos/powerstrip-weave
   ports:
     - "80"
   volumes:
-    - /var/run/docker.sock:/var/run/docker.sock \
+    - /var/run/docker.sock:/var/run/docker.sock
   command: launch
 powerstrip:
   image: clusterhq/powerstrip
   ports:
-   - "2375:2375"
+    - "2378:2375"
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - adapters.yml:/etc/powerstrip/adapters.yml
   links:
-   - weave:weave
+    - weave:weave
 EOF
+```
+
+#### Install docker-compose at boot2docker installation
+
+```
+> docker run --rm --entrypoint=/scripts/install -v /usr/local/bin:/data infrabricks/docker-compose
+```
+
+```
+> docker-compose up
+```
+
+or
+
+```
+$ docker-machine ssh weave-01 "cd $(pwd) ; docker-compose up"
+```
+
+Now you can access docker-compose also from your windows system,
+if your sources are created at `c:\Users\<your account>\powerstrip-demo`.
+You must install the git/bash tools from boot2docker package!
+
+```
+$ docker-machine ssh weave-01
+> export DOCKER_HOST=tcp://127.0.0.1:2378
+docker ps
+```
+
+or
+
+```
+$ docker-machine ssh weave-01 "/bin/sh -c "docker -H tcp://127.0.0.1:2375 ps"
 ```
 
 * powerstrip-weave start zettio weave image!
@@ -82,35 +114,12 @@ alias weave=_weave
 weave status
 ```
 
-#### Install docker-compose at boot2docker installation
-
-```
-$ docker run --rm --entrypoint=/scripts/install -v /usr/local/bin:/data infrabricks/docker-compose
-$ docker-machine ssh weave-01 "cd $(pwd) ; docker-compose up"
-```
-
-Now you can access docker-compose also from your windows system,
-if your sources are created at `c:\Users\<your account>\powerstrip-demo`.
-You must install the git/bash tools from boot2docker package!
-
-```
-$ docker-machine ssh weave-01
-> export DOCKER_HOST=tcp://127.0.0.1:2375
-docker ps
-```
-
-or
-
-```
-$ docker-machine ssh weave-01 "/bin/sh -c "docker -H tcp://127.0.0.1:2375 ps"
-```
-
 #### Start a container
 
 You tell powerstrip-weave what IP address you want to give a container by using the `WEAVE_CIDR` environment variable for that new container - here we run a database server:
 
 ```
-$ docker run -d --name mysql \
+> DOCKER_HOST=tcp://127.0.0.1:2378 docker run -d --name mysql \
     -e WEAVE_CIDR=10.255.0.1/8 \
     -e MYSQL_ROOT_PASSWORD=mysecretpassword \
     mysql
@@ -125,6 +134,16 @@ default via 172.17.42.1 dev eth0
 10.0.0.0/8 dev ethwe  proto kernel  scope link  src 10.255.0.1
 172.17.0.0/16 dev eth0  proto kernel  scope link  src 172.17.0.17
 224.0.0.0/4 dev ethwe  scope link
+```
+
+#### Stop and remove
+
+```
+docker-compose stop
+docker-compose rm
+# stop and remove sub container...
+docker stop weave weavewait
+docker rm weave weavewait
 ```
 
 ### install second powerstrip weave machine
@@ -164,13 +183,13 @@ weave:
     - /var/run/docker.sock:/var/run/docker.sock
   command: launch $(docker-machine ip weave-01)
 debug:
-    image: binocarlos/powerstrip-debug
-    ports:
-      - "80"
+  image: binocarlos/powerstrip-debug
+  ports:
+    - "80"
 powerstrip:
   image: clusterhq/powerstrip
   ports:
-   - "2375:2375"
+    - "2378:2375"
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - adapters-debug.yml:/etc/powerstrip/adapters.yml
@@ -178,7 +197,7 @@ powerstrip:
    - weave:weave
    - debug:debug
 EOF
-> docker-compose -f docker-compose-weave2.yml up -d
+> docker-compose -f docker-compose-weave-02.yml up -d
 ```
 
 **WARNING**: Here you must use the weave-01 IP-address. The example
@@ -198,7 +217,7 @@ Now you can start a container and ping your mysql:
 
 ```
 $ docker-machine ssh weave-02
-> DOCKER_HOST=tcp://127.0.0.1:2375
+> DOCKER_HOST=tcp://127.0.0.1:2378
 > docker run -ti --rm -e -e WEAVE_CIDR=10.255.0.2/8 ubuntu
 > ping 10.255.0.1 -c 1
 ```

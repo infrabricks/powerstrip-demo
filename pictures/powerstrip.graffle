@@ -26,7 +26,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2015-04-05 13:44:58 +0000</string>
+	<string>2015-04-06 05:19:19 +0000</string>
 	<key>Modifier</key>
 	<string>Peter Rossbach</string>
 	<key>NotesVisible</key>
@@ -2394,7 +2394,7 @@ proxy}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{269.13776969909668, 179.75}, {24, 14}}</string>
+					<string>{{264.6378002166748, 170.25}, {24, 14}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -2477,54 +2477,6 @@ proxy}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{204, 303}, {33, 14}}</string>
-					<key>Class</key>
-					<string>ShapedGraphic</string>
-					<key>FitText</key>
-					<string>YES</string>
-					<key>Flow</key>
-					<string>Resize</string>
-					<key>ID</key>
-					<integer>37</integer>
-					<key>Shape</key>
-					<string>Rectangle</string>
-					<key>Style</key>
-					<dict>
-						<key>fill</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-						<key>shadow</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-						<key>stroke</key>
-						<dict>
-							<key>Draws</key>
-							<string>NO</string>
-						</dict>
-					</dict>
-					<key>Text</key>
-					<dict>
-						<key>Pad</key>
-						<integer>0</integer>
-						<key>Text</key>
-						<string>{\rtf1\ansi\ansicpg1252\cocoartf1344\cocoasubrtf720
-\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
-
-\f0\fs24 \cf0 ethwe}</string>
-						<key>VerticalPad</key>
-						<integer>0</integer>
-					</dict>
-					<key>Wrap</key>
-					<string>NO</string>
-				</dict>
-				<dict>
-					<key>Bounds</key>
 					<string>{{163, 250.25}, {24, 14}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
@@ -2564,7 +2516,7 @@ proxy}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
 
-\f0\fs24 \cf0 eth1}</string>
+\f0\fs24 \cf0 eth0}</string>
 						<key>VerticalPad</key>
 						<integer>0</integer>
 					</dict>
@@ -2878,8 +2830,8 @@ daemon}</string>
 					<integer>24</integer>
 					<key>Points</key>
 					<array>
-						<string>{206.94944198543206, 265.5}</string>
-						<string>{206.51859977433136, 167.5}</string>
+						<string>{206.95065049093995, 265.5}</string>
+						<string>{206.53010684851517, 167.5}</string>
 					</array>
 					<key>Style</key>
 					<dict>
@@ -2934,7 +2886,7 @@ daemon}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{143.5, 288}, {24, 14}}</string>
+					<string>{{139, 288}, {33, 14}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -2973,7 +2925,7 @@ daemon}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
 
-\f0\fs24 \cf0 eth2}</string>
+\f0\fs24 \cf0 ethwe}</string>
 						<key>VerticalPad</key>
 						<integer>0</integer>
 					</dict>
@@ -3378,7 +3330,7 @@ weave}</string>
 						<integer>4</integer>
 					</dict>
 					<key>ID</key>
-					<integer>5</integer>
+					<integer>78</integer>
 					<key>Points</key>
 					<array>
 						<string>{134, 155.99998305320355}</string>
@@ -3474,7 +3426,7 @@ weave}</string>
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{10, 83}, {271, 260}}</string>
+					<string>{{10, 83}, {278, 260}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>ID</key>
@@ -3601,7 +3553,7 @@ weave}</string>
 		<key>ExpandedCanvases</key>
 		<array/>
 		<key>Frame</key>
-		<string>{{447, 191}, {694, 925}}</string>
+		<string>{{368, 4}, {694, 873}}</string>
 		<key>ListView</key>
 		<true/>
 		<key>OutlineWidth</key>
@@ -3615,7 +3567,7 @@ weave}</string>
 		<key>SidebarWidth</key>
 		<integer>120</integer>
 		<key>VisibleRegion</key>
-		<string>{{0, 0}, {559, 783}}</string>
+		<string>{{0, 0}, {559, 731}}</string>
 		<key>Zoom</key>
 		<real>1</real>
 		<key>ZoomValues</key>
