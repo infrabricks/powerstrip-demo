@@ -105,7 +105,7 @@ $ docker-machine ssh weave-01
 or
 
 ```
-$ docker-machine ssh weave-01 "/bin/sh -c "docker -H tcp://127.0.0.1:2378 ps"
+$ docker-machine ssh weave-01 "/bin/sh -c \"docker -H tcp://127.0.0.1:2378 ps\""
 ```
 
 * powerstrip-weave start zettio weave image!
