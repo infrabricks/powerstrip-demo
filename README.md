@@ -318,7 +318,7 @@ $ docker run -ti --rm ubuntu
 * Limit the usage: Add access control to your nginx conf
 * check with weave
 
-### weave-03 with tls
+### Setup TLS
 
 **TIP**: Before continuing, please stop and remove all container from the TLS debugging experiment above.
 
@@ -368,7 +368,7 @@ $ docker run -ti -e WEAVE_CIDR=10.255.0.4/8 ubuntu
 ...
 ```
 
-### build the nginx docker patched version
+### Build the nginx docker patched version
 
 ```
 $ cd nginx-docker
@@ -387,7 +387,7 @@ $ cd nginx
 Patch it with `nginx-docker/docker-stream-patch.txt`
 * https://blog.jtlebi.fr/2014/12/12/how-to-run-docker-behind-an-nginx-reverse-proxy/
 
-## Use weave commands
+## PART 3: Use some weave commands
 
 ```
 _weave() {
@@ -409,7 +409,7 @@ $ docker run --rm -it \
 
 $ docker run --rm \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    binocarlos/powerstrip-weave expose 10.255.0.1/8
+    binocarlos/powerstrip-weave expose 10.255.0.10/8
 ```
 
 Read more about weave:
@@ -417,7 +417,7 @@ Read more about weave:
 * https://github.com/zettio/weave
 * http://zettio.github.io/weave/
 
-### weave links
+### Weave links
 
 Current docker-compose has no `--add-host parameter` and you must
 setup with fix IP-Address inside your env config.
@@ -467,7 +467,7 @@ API_IP=10.255.0.10
 crane lift
 ```
 
-## start a powerstrip debug container
+### Start a powerstrip debug container
 
 ```
 $ docker run -ti --rm \
