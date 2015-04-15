@@ -446,24 +446,24 @@ advanced shell features such as command substitution like `$(docker-machine ip a
 https://github.com/michaelsauter/crane
 
 ```bash
-API_IP=10.255.0.10
 cat >crane.yaml <<EOF
 containers:
   api:
     dockerfile: api
     run:
       cmd: "node /srv/app/index.js"
-      environment: [ "WEAVE_CIDR=${API_IP}/8", "REMOTE_VALUE=oranges" ]
+      environment: [ "WEAVE_CIDR=\${API_IP}/8", "REMOTE_VALUE=oranges" ]
       detach: true
   server:
     dockerfile: server
     run:
       cmd: "node /srv/app/index.js"
       expose: [ "8082:80" ]
-      add-host: [ "${API_IP} api" ]
+      add-host: [ "\${API_IP} api" ]
       environment: [ "WEAVE_CIDR=10.255.0.11/8" ]
       detach: true
 EOF
+API_IP=10.255.0.10
 crane lift
 ```
 
