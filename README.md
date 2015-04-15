@@ -245,7 +245,7 @@ $ docker-machine ssh weave-02
 > ping 10.255.0.1 -c 1
 ```
 
-## Setup powerstrip with TLS
+## PART 2: Setup powerstrip with TLS
 
 The current show case version does not support TLS.
 If you plan easy transparent access from your Host, together with machine and swarm, it's a good idea to set up TLS.
