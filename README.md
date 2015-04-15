@@ -60,7 +60,7 @@ EOF
 Both Powerstrip and Weave are going to run as containers, controlled by a docker composition:
 * https://github.com/clusterhq/powerstrip
 
-```bash 
+```bash
 $ cat >docker-compose.yml <<EOF
 weave:
   image: binocarlos/powerstrip-weave
@@ -223,7 +223,7 @@ EOF
 ```
 
 **WARNING**: Here, we have use the weave-01 IP-address. The example
-uses a subshell feature, but dynamic variable access isn't supported yet from docker-compose 1.1.0. 
+uses a subshell feature, but dynamic variable access isn't supported yet from docker-compose 1.1.0.
 Sometimes IP-address from a docker machine can change after reboot!
 
 ```
@@ -419,7 +419,8 @@ Read more about weave:
 
 ### weave links
 
-You are now at IP business links with ENV Parameter docker-compose has no `--add-host parameter`
+Current docker-compose has no `--add-host parameter` and you must
+setup with fix IP-Address inside your env config.
 
 ```
 api:
@@ -439,25 +440,27 @@ server:
 ```
 
 
-Use crane instead docker-compose
+The tool Crane supports add-host, external ENV parameter and
+advanced shell features such as command substitution like `$(docker-machine ip api-server)`.
 
 https://github.com/michaelsauter/crane
 
 ```bash
+API_IP=10.255.0.10
 cat >crane.yaml <<EOF
 containers:
   api:
     dockerfile: api
     run:
       cmd: "node /srv/app/index.js"
-      environment: [ "WEAVE_CIDR=10.255.0.10/8", "REMOTE_VALUE=oranges" ]
+      environment: [ "WEAVE_CIDR=${API_IP}/8", "REMOTE_VALUE=oranges" ]
       detach: true
   server:
     dockerfile: server
     run:
       cmd: "node /srv/app/index.js"
       expose: [ "8082:80" ]
-      add-host: [ "10.255.0.10 api" ]
+      add-host: [ "${API_IP} api" ]
       environment: [ "WEAVE_CIDR=10.255.0.11/8" ]
       detach: true
 EOF
