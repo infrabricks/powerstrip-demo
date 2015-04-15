@@ -1,26 +1,32 @@
 # Powerstrip docker-machine weave demo
 
+## What
+
+This demo shows, how [docker-machine](https://github.com/docker/machine) is used to launch containers and automatically connect them to a [weave](https://weave.works) network using [powerstrip](https://github.com/clusterhq/powerstrip) adapters.
+
 ![logo](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/logo.png)
 
-* Install boot2docker and https://github.com/docker/machine.
-* If you use multiple machines, setup a docker registry mirror!
-* This project show:
-  * How you can use powerstrip with docker-machine.
-  * Setup powerstrip with TLS nginx proxy.
+## Pre-Requisites
 
-## Out of the box powerstrip weave installation
+* Install boot2docker and [Docker Machine](https://github.com/docker/machine).
+* If you use multiple machines we recommend setting up up a docker registry mirror
+* This project shows:
+  * How you can use powerstrip in conjunction with docker-machine, and
+  * how to set up powerstrip with a TLS-enabled nginx proxy.
+
+## Part 1: Out of the box powerstrip weave installation
 
 ![powerstrip-weave](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-weave.png)
 
 ### Create you first powerstrip weave machine
 
-**TIPP**: Add docker registry mirror to your installation at a separate machine!
+**TIP**: Add docker registry mirror to your installation at a separate machine, this will speed up the image pulling process.
+An article in docker's docs will show how:
   * https://github.com/docker/docker/blob/master/docs/sources/articles/registry_mirror.md
-  * faster setup!
 
-Use the mirror at you docker machine.
+When setting up hosts with docker-machine, specify registry mirror like so:
 
-```
+```bash
 $ docker-machine create -d virtualbox weave-01
 $ docker-machine ssh weave-01
 > sudo sh
@@ -30,14 +36,14 @@ $ docker-machine ssh weave-01
 > /etc/init.d/docker start
 ```
 
-Create your powerstrip demo weave setup at your host share
+For this demo, we'll create the powerstrip demo weave setup on a volume on the host, to be shared with the virtual machine:
 
-* https://github.com/clusterhq/powerstrip
+We'll create a `adapters.yml` to hook up endpoints for create, start and restart commands, and connect them to a weave adapter:
 
-```
-cd /Users/peter
-mkdir -p powerstrip-demo
-cd powerstrip-demo
+```bash
+$ cd /Users/peter
+$ mkdir -p powerstrip-demo
+$ cd powerstrip-demo
 $ cat >adapters.yml <<EOF
 endpoints:
   "POST /*/containers/create":
@@ -51,10 +57,11 @@ adapters:
 EOF
 ```
 
-Create you powerstrip weave at a docker composition:
+Both Powerstrip and Weave are going to run as containers, controlled by a docker composition:
+* https://github.com/clusterhq/powerstrip
 
-```
-cat >docker-compose.yml <<EOF
+```bash 
+$ cat >docker-compose.yml <<EOF
 weave:
   image: binocarlos/powerstrip-weave
   ports:
@@ -74,9 +81,11 @@ powerstrip:
 EOF
 ```
 
-**INFO**: boot2docker block port 2375, we use 2378!
+**INFO**: boot2docker blocks port 2375, so we'll use 2378, as above.
 
 #### Install docker-compose at boot2docker installation
+
+We need to install docker-compose and we're going to use our own [binary container](https://registry.hub.docker.com/u/infrabricks/docker-compose/) `infrabricks/docker-compose` for that:
 
 ```
 > docker run --rm --entrypoint=/scripts/install -v /usr/local/bin:/data infrabricks/docker-compose
@@ -86,7 +95,7 @@ EOF
 > docker-compose up
 ```
 
-or
+or (via `docker-machine`)
 
 ```
 $ docker-machine ssh weave-01 "cd $(pwd) ; docker-compose up"
@@ -102,16 +111,19 @@ $ docker-machine ssh weave-01
 > docker ps
 ```
 
-or
+or (via `docker-machine`)
 
 ```
 $ docker-machine ssh weave-01 "/bin/sh -c \"docker -H tcp://127.0.0.1:2378 ps\""
 ```
 
-* powerstrip-weave start zettio weave image!
+Next up:
+* powerstrip-weave start zettio weave image
 * install weave cli tool
 
-```
+A small wrapper function and an alias will redirect weave commands to our powerstripdemo-weave-container:
+
+```bash
 _weave() {
   docker exec -ti powerstripdemo_weave_1 /srv/app/run.sh weave $@
 }
@@ -122,16 +134,17 @@ weave status
 
 #### Start a container
 
-You tell powerstrip-weave what IP address you want to give a container by using the `WEAVE_CIDR` environment variable for that new container - here we run a database server:
+We're able to inject IP adresses into weave-ified containers by using the `WEAVE_CIDR` environment variable for that new container - i.e. for a database server:
 
-```
-> DOCKER_HOST=tcp://127.0.0.1:2378 docker run -d --name mysql \
+```bash
+> DOCKER_HOST=tcp://127.0.0.1:2378 docker run -d \
+    --name mysql \
     -e WEAVE_CIDR=10.255.0.1/8 \
     -e MYSQL_ROOT_PASSWORD=mysecretpassword \
     mysql
 ```
 
-weave network connected
+When we `docker-exec` into that container, we can see the weave-assigned ip address:
 
 ```
 docker@dev-test2:~$ docker exec -ti mysql /bin/bash
@@ -155,7 +168,9 @@ default via 172.17.42.1 dev eth0
 
 ### install second powerstrip weave machine
 
-```
+We'll add an extra debugging adapter, from `binocarlos/powerstrip-debug`:
+
+```bash
 $ docker-machine create -d virtualbox weave-02
 $ docker-machine ip weave-01
 $ docker-machine ssh weave-02
@@ -168,7 +183,7 @@ $ docker-machine ssh weave-02
 > docker run --rm --entrypoint=/scripts/install -v /usr/local/bin:/data infrabricks/docker-compose
 ```
 
-```
+```bash
 cd /Users/peter/powerstrip-demo
 cat >adapters-debug.yml <<EOF
 version: 1
@@ -207,8 +222,9 @@ EOF
 > docker-compose -f docker-compose-weave-02.yml up -d
 ```
 
-**WARNING**: Here you must use the weave-01 IP-address. The example
-use subshell feature, but dynamic variable access isn't supported yet form docker-compose 1.1.0. Sometimes IP-address from a docker machine can changed after reboot!
+**WARNING**: Here, we have use the weave-01 IP-address. The example
+uses a subshell feature, but dynamic variable access isn't supported yet from docker-compose 1.1.0. 
+Sometimes IP-address from a docker machine can change after reboot!
 
 ```
 weave:
@@ -231,12 +247,12 @@ $ docker-machine ssh weave-02
 
 ## Setup powerstrip with TLS
 
-Currently powerstrip docker extension show case version doesn't support tls.
-If you plan easy transparent access from your MAC, with machine and swarm, it is a good idea to setup TLS.
+The current show case version does not support TLS.
+If you plan easy transparent access from your Host, together with machine and swarm, it's a good idea to set up TLS.
 
 ![powerstrip-tls](https://raw.githubusercontent.com/infrabricks/powerstrip-demo/master/images/powerstrip-tls.png)
 
-**The plan**:
+**What to do**:
 
 * use nginx with docker-machine boot2docker certs
   * use 2376 as ssl port
@@ -249,8 +265,7 @@ If you plan easy transparent access from your MAC, with machine and swarm, it is
   * Build NGINX form source with docker: (Jean-Tiare LE BIGOT) https://github.com/sameersbn/docker-nginx
   * http://nginx.org/en/download.html
 
-### Check my powerstrip TLS experiment
-
+### Testing the powerstrip TLS experiment
 
 ```
 $ docker-machine create -d virtualbox weave-03
@@ -293,9 +308,10 @@ $ docker run -ti --rm ubuntu
   * http://wiki.nginx.org/HttpSslModule#Generate_Certificates
   * https://www.digitalocean.com/community/tutorials/how-to-create-a-ssl-certificate-on-nginx-for-ubuntu-12-04
   * https://aralbalkan.com/scribbles/setting-up-ssl-with-nginx-using-a-namecheap-essentialssl-wildcard-certificate-on-digitalocean/
+  * https://github.com/de-wiring/ix/tree/master/02_docker_tls
 * check swarm integration
   * auto setup swarm agent container if ip change at bootlocal.sh
-* sometimes docker-maschine reinstall /var/lib/boot2docker/profile
+* sometimes docker-machine reinstalls /var/lib/boot2docker/profile
   * if ip adresse change
   * After a connection failure
   * you use the command `docker-machine regenerate-certs <machine>``
@@ -304,9 +320,9 @@ $ docker run -ti --rm ubuntu
 
 ### weave-03 with tls
 
-**TIPP**: Stop and remove all container from tls debugging experiment!
+**TIP**: Before continuing, please stop and remove all container from the TLS debugging experiment above.
 
-```
+```bash
 > cat >/var/lib/boot2docker/profile <<EOF
 DOCKER_TLS=no
 DOCKER_HOST=" "
@@ -403,7 +419,7 @@ Read more about weave:
 
 ### weave links
 
-You are now at IP buisness links with ENV Parameter docker-compose has no `--add-host parameter`
+You are now at IP business links with ENV Parameter docker-compose has no `--add-host parameter`
 
 ```
 api:
@@ -427,7 +443,7 @@ Use crane instead docker-compose
 
 https://github.com/michaelsauter/crane
 
-```
+```bash
 cat >crane.yaml <<EOF
 containers:
   api:
