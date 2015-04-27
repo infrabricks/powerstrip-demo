@@ -118,7 +118,7 @@ $ docker-machine ssh weave-01 "/bin/sh -c \"docker -H tcp://127.0.0.1:2378 ps\""
 ```
 
 Next up:
-* powerstrip-weave start zettio weave image
+* powerstrip-weave start weave image
 * install weave cli tool
 
 A small wrapper function and an alias will redirect weave commands to our powerstripdemo-weave-container:
@@ -414,8 +414,8 @@ $ docker run --rm \
 
 Read more about weave:
 
-* https://github.com/zettio/weave
-* http://zettio.github.io/weave/
+* https://github.com/weaveworks/weave
+* http://weave.works/
 
 ### Weave links
 
